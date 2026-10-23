@@ -69,3 +69,26 @@ jobs:
       - name: Publish Pages from this new demo repository ONLY
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify public preview pages and shared app assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="https://mudagiri.github.io"
+          # GitHub Pages CDN can briefly lag behind a successful deployment.
+          for PAGE in /chapter3-v2-preview.html /pilot/chapter2-v32/ /pilot/chapter2-v32/pilot/money-type/; do
+            echo "Checking ${BASE}${PAGE}"
+            curl --fail --silent --show-error --location --retry 8 --retry-delay 3 "${BASE}${PAGE}" -o /tmp/pages-response.html
+            test "$(wc -c </tmp/pages-response.html)" -gt 100
+            if [[ "$PAGE" == /chapter3-v2-preview.html ]]; then
+              grep -q '未来の航路 V2' /tmp/pages-response.html
+            else
+              grep -q 'id="root"' /tmp/pages-response.html
+            fi
+          done
+          ASSET="$(grep -oE 'src="./assets/[^"]+\.js"' /tmp/pages-response.html | head -1 | cut -d'"' -f2)"
+          test -n "$ASSET"
+          curl --fail --silent --show-error --location --retry 8 --retry-delay 3 "${BASE}/${ASSET#./}" -o /tmp/chapter3-js
+          test "$(wc -c </tmp/chapter3-js)" -gt 100
+          echo "CHAPTER3_V2_LIVE_HTTP_SMOKE_PASS (landing + two deep entry pages + JS asset)"
+
