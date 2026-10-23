@@ -55,6 +55,8 @@ jobs:
           test -f github-pages-chapter3-v2-bundle/chapter3-v2-preview.html
           test -f github-pages-chapter3-v2-bundle/pilot/chapter2-v32/pilot/money-type/index.html
           test -f github-pages-chapter3-v2-bundle/pilot/chapter2-v32/index.html
+          test -f github-pages-chapter3-v2-bundle/.nojekyll
+          test -d github-pages-chapter3-v2-bundle/assets
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
