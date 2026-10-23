@@ -29,7 +29,7 @@ jobs:
         with:
           repository: mudagiri/mudagii
           # Frozen QA PASS SHA. Do not automatically publish newer Draft PR commits.
-          ref: 011aa65ec4f621eac3202e348eab0834e59f5459
+          ref: 953c174d85df7f9d5ebcc5772b40b608d0fba391
           persist-credentials: false
 
       - name: Set up Node
