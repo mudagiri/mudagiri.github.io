@@ -29,7 +29,7 @@ jobs:
         with:
           repository: mudagiri/mudagii
           # Frozen QA PASS SHA. Do not automatically publish newer Draft PR commits.
-          ref: a860bc8f40883dbdaff0259afce3d42df48dc4fe
+          ref: 011aa65ec4f621eac3202e348eab0834e59f5459
           persist-credentials: false
 
       - name: Set up Node
@@ -81,7 +81,8 @@ jobs:
             curl --fail --silent --show-error --location --retry 8 --retry-delay 3 "${BASE}${PAGE}" -o /tmp/pages-response.html
             test "$(wc -c </tmp/pages-response.html)" -gt 100
             if [[ "$PAGE" == /chapter3-v2-preview.html ]]; then
-              grep -q '未来の航路 V2' /tmp/pages-response.html
+              grep -q '未来攻略クエスト・再設計試作' /tmp/pages-response.html
+            grep -q 'chapter3solo=1' /tmp/pages-response.html
             else
               grep -q 'id="root"' /tmp/pages-response.html
             fi
