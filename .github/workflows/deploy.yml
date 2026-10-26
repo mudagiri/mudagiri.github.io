@@ -29,7 +29,7 @@ jobs:
         with:
           repository: mudagiri/mudagii
           # Frozen QA PASS SHA. Do not automatically publish newer Draft PR commits.
-          ref: 953c174d85df7f9d5ebcc5772b40b608d0fba391
+          ref: 7f5b0a16686a4b1c65484b77ae847171fea0361a
           persist-credentials: false
 
       - name: Set up Node
@@ -91,5 +91,13 @@ jobs:
           test -n "$ASSET"
           curl --fail --silent --show-error --location --retry 8 --retry-delay 3 "${BASE}/${ASSET#./}" -o /tmp/chapter3-js
           test "$(wc -c </tmp/chapter3-js)" -gt 100
-          echo "CHAPTER3_V2_LIVE_HTTP_SMOKE_PASS (landing + two deep entry pages + JS asset)"
+          # In the nested Chapter1 journey, 3 RPG backgrounds use legacy
+          # CSS relative URLs. Verify all six exact-path aliases live in Pages.
+          for PREFIX in /pilot/chapter2-v32 /pilot/chapter2-v32/pilot/money-type; do
+            for FILE in MP_BG_01_GUILD_HALL.webp MP_BG_02_JOB_UNLOCK.webp MP_BG_03_NEXT_QUEST.webp; do
+              curl --head --fail --silent --show-error --location --retry 8 --retry-delay 3 "${BASE}${PREFIX}/assets/mudagiri/backgrounds/money-personality/v1/${FILE}" -o /tmp/chapter3-image-head
+            done
+          done
+          echo "CHAPTER3_V2_LIVE_BACKGROUND_ASSETS_PASS (6 deep-route aliases)"
+          echo "CHAPTER3_V2_LIVE_HTTP_SMOKE_PASS (landing + two deep entry pages + JS asset + background aliases)"
 
